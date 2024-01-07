@@ -1,7 +1,6 @@
 <script>
     import Header from "../components/Header.svelte";
     import { getDatabase, ref, push } from "firebase/database";
-    import { getStorage } from "firebase/storage";
 
     let title;
     let description;
@@ -9,10 +8,8 @@
     let subject;
     let inputWord = '';
 
-    const storage = getStorage();
     const db = getDatabase();
 
-    
     async function submitGameSetting() {
         push(ref(db, "line/"), {
             title, // title:title을 생략
@@ -22,7 +19,6 @@
         });
         window.location.hash = "/";
     }
-
 
 </script>
 <Header />

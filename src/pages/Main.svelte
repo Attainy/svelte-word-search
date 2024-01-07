@@ -5,31 +5,21 @@
     import { getDatabase, ref, onValue } from "firebase/database";
 
     const db = getDatabase();
-    const itemsRef = ref(db, "items/");
+    const lineRef = ref(db, "line/");
 
     let allCreatedGame;
 
     // 화면이 렌더링될 때마다 onValue 호출될 수 있도록 하는 게 onMount
     onMount(() => {
-        onValue(itemsRef, (snapshot) => {
+        onValue(lineRef, (snapshot) => {
         const data = snapshot.val();
         allCreatedGame = Object.values(data).reverse(); // 최신 업로드글이 위로
         });
     });
 
+    console.log(allCreatedGame)
+
     // let allCreatedGame = [
-    //   {
-    //     subject: 'Sitcoms',
-    //     title: 'Friends',
-    //     wordList: ['FREINDS', 'ANISTON', 'RACHEL', 'GREEN', 'COUNTREYY'],
-    //     description: 'Sure to be a hugely popular puzzle around here, simply find all of the hidden words relating to the classic sitcom Friends.',
-    //   },
-    //   {
-    //     subject: 'Sitcoms',
-    //     title: 'Friends',
-    //     wordList: ['FREINDS', 'ANISTON', 'RACHEL', 'GREEN', 'COUNTREYY'],
-    //     description: 'Sure to be a hugely popular puzzle around here, simply find all of the hidden words relating to the classic sitcom Friends.',
-    //   },
     //   {
     //     subject: 'Sitcoms',
     //     title: 'Friends',
