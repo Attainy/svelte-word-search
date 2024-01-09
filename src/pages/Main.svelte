@@ -7,7 +7,8 @@
     const db = getDatabase();
     const lineRef = ref(db, "line/");
 
-    let allCreatedGame;
+    // 반응형 변수 선언. 자동으로 업데이트 됨
+    $: allCreatedGame = [];
 
     // 화면이 렌더링될 때마다 onValue 호출될 수 있도록 하는 게 onMount
     onMount(() => {
@@ -17,18 +18,8 @@
         });
     });
 
-    console.log(allCreatedGame)
+    console.log('!!', allCreatedGame)
 
-    // let allCreatedGame = [
-    //   {
-    //     subject: 'Sitcoms',
-    //     title: 'Friends',
-    //     wordList: ['FREINDS', 'ANISTON', 'RACHEL', 'GREEN', 'COUNTREYY'],
-    //     description: 'Sure to be a hugely popular puzzle around here, simply find all of the hidden words relating to the classic sitcom Friends.',
-    //   },
-    // ]
-
-    console.log()
 </script>
 
 
