@@ -3,25 +3,27 @@
     import Header from "../components/Header.svelte";
     import SubjectList from "../components/SubjectList.svelte";
     import { getDatabase, ref, onValue } from "firebase/database";
+    import { originGameSet } from "../assets/gameset";
 
     const db = getDatabase();
     const lineRef = ref(db, "line/");
 
     // 반응형 변수 선언. 자동으로 업데이트 됨
-    $: allCreatedGame = [];
+    $: allCreatedGame = originGameSet;
 
     // 화면이 렌더링될 때마다 onValue 호출될 수 있도록 하는 게 onMount
     onMount(() => {
         onValue(lineRef, (snapshot) => {
         const data = snapshot.val();
-        allCreatedGame = Object.values(data).reverse(); // 최신 업로드글이 위로
+        allCreatedGame = allCreatedGame.concat(Object.values(data)); // 최신 업로드글이 위로
+        console.log('all', allCreatedGame)
         });
     });
 
-    console.log('!!', allCreatedGame)
+    function selectGame () {
 
+    };
 </script>
-
 
 <Header />
 <div class='main'>
@@ -38,11 +40,9 @@
     </div>
 
     <div class="game-select">
-      {#if !allCreatedGame == undefined}
-        {#each allCreatedGame as gameSetBox}
-          <SubjectList gameSetBox={gameSetBox}/>
-        {/each}
-      {/if}
+      {#each allCreatedGame as gameSetBox}
+        <SubjectList gameSetBox={gameSetBox} on:click={selectGame}/>
+      {/each}
     </div>
     
 </div>
@@ -51,8 +51,9 @@
   .game-select {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     margin-top: 2rem;
     gap: 1rem;
+    flex-wrap: wrap;
   }
 </style>

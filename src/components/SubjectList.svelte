@@ -1,6 +1,7 @@
 <script>
     export let gameSetBox;
-    </script>
+
+</script>
 
 <div class="subject-list">
     <h3>{gameSetBox.subject}</h3>
@@ -16,6 +17,7 @@
         border: 1px solid lightgray;
         padding: 1rem;
         cursor: pointer;
+        width: 32%;
     }
 
     h3 {
