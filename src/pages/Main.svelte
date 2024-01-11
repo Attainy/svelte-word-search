@@ -16,9 +16,12 @@
         onValue(lineRef, (snapshot) => {
         const data = snapshot.val();
         allCreatedGame = allCreatedGame.concat(Object.values(data)); // 최신 업로드글이 위로
-        console.log('all', allCreatedGame)
+        localStorage.setItem("allCreatedGame", JSON.stringify(allCreatedGame));
+        console.log('all', JSON.stringify(allCreatedGame))
         });
     });
+
+    
 
 </script>
 

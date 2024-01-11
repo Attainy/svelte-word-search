@@ -9,7 +9,7 @@
     </div>
 
     <div class="header-menu">
-        <a href="/#/game/00" class="header-link">
+        <a href="/#/game" class="header-link">
             <div class="play">
                 <div class="header-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
