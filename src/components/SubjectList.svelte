@@ -1,13 +1,14 @@
 <script>
     export let gameSetBox;
+    export let id;
 
 </script>
 
-<div class="subject-list">
+<a href="/#/game/{id}" class="subject-list">
     <h3>{gameSetBox.subject}</h3>
     <h4>{gameSetBox.title}</h4>
     <p>{gameSetBox.description}</p>
-</div>
+</a>
 
 <style>
     .subject-list {

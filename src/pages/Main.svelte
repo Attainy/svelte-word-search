@@ -20,12 +20,9 @@
         });
     });
 
-    function selectGame () {
-
-    };
 </script>
 
-<Header />
+<Header/>
 <div class='main'>
     <div class="rep">
       <img src="https://thewordsearch.com/v4/img/word-search-puzzle.png" alt="game-img" />
@@ -40,8 +37,8 @@
     </div>
 
     <div class="game-select">
-      {#each allCreatedGame as gameSetBox}
-        <SubjectList gameSetBox={gameSetBox} on:click={selectGame}/>
+      {#each allCreatedGame as gameSetBox, index}
+        <SubjectList gameSetBox={gameSetBox} id={index}/>
       {/each}
     </div>
     

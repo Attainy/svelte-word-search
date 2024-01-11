@@ -9,7 +9,7 @@
   const routes = {
     '/': Main,
     '/admin': Admin,
-    '/game': Game,
+    '/game/:id': Game,
     '*': NotFound // 그 외 모든 페이지 (잘못된 경로)
   }
   
