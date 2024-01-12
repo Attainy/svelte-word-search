@@ -6,7 +6,6 @@
     let description;
     let wordList = [];
     let subject;
-    let inputWord = '';
 
     const db = getDatabase();
 
@@ -18,6 +17,8 @@
         if (wordCheck.includes(false)) {
             alert("단어는 5글자 이상이어야 합니다.")
             wordList = [];
+            document.querySelectorAll("input.input-word")[wordCheck.indexOf(false)].focus();
+
         } else if (wordList.length < 10) {
             alert("단어는 10개 이상이어야 합니다.")
             wordList = [];
@@ -65,7 +66,7 @@
             <!-- admin -->
             {#each [...Array(parseInt('30'))] as item, index}
                 <li id={`word${index}`}>
-                    <input type="text" value={inputWord} on:change={handleWordList} />
+                    <input type="text" class="input-word" on:change={handleWordList} />
                 </li>
             {/each}
         </div>
