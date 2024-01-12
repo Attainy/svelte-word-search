@@ -19,6 +19,8 @@
         padding: 1rem;
         cursor: pointer;
         width: 32%;
+        text-decoration: none;
+        color: black;
     }
 
     h3 {
@@ -28,9 +30,10 @@
         padding: 0.5rem;
         text-align: center;
     }
-
+    
     h4 {
         font-size: 1.2rem;
+        color: red;
     }
 
 </style>
