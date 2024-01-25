@@ -141,12 +141,10 @@
 
 
 
-<div class='gridBox' style:grid-template-columns={`repeat(${rowLen}, 1fr)`}>
+<div class='grid-box' style:grid-template-columns={`repeat(${rowLen}, 1fr)`}>
     {#each items as val}
-        <div class="itemBox" >
+        <div class="item-box" >
             <div class="item">{val}</div>
         </div>
     {/each}
 </div>
-
-
