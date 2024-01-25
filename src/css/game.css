@@ -13,6 +13,10 @@
     gap: 0px;
 }
 
+.item-box {
+    background-color: white;
+}
+
 .item {
     font-size: 1.5rem;
     font-weight: bold;
@@ -81,3 +85,10 @@
     }
 }
 
+
+.drag-change {
+    background-color: var(--markRed);
+    border-color: var(--markRed);
+    color: white;
+    text-decoration-color: white;
+}

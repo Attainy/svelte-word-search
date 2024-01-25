@@ -19,7 +19,7 @@
       const timerDiv = document.querySelector('div.info-bar__time');
       timerDiv.innerText = `${minuteString} : ${secondString}`;
     }
-    setInterval(stopWatch, 1000);
+    setInterval(stopWatch, 1000);    
 </script>
 
 <Header />

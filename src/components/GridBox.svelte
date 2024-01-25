@@ -123,8 +123,6 @@
 
     // 정답 글자
     correctWords = ['BOXER']
-
-
     const applyStyleCheck = (rowIdx, colIdx) => {
     let styleCheck = false;
     // Object.keys(wordInfo).map((word) => {
@@ -137,14 +135,46 @@
     })
     return styleCheck;
     }
+
+    /* 드래그 이벤트 */
+
+    let draggElement = [];
+
+    const dragHandler = (event) => {
+        let dataIndex = event.target.getAttribute('data-index');
+        let itemBox = document.querySelector(`.item-box[data-index="${dataIndex}"]`);
+        try {
+            itemBox.classList.add('drag-change');
+            draggElement.push(dataIndex);
+        } catch {
+
+        }
+    }
+
+    const dragOverHandler = (event) => {
+        draggElement.map((dataIndex) => {
+            let itemBox = document.querySelector(`.item-box[data-index="${dataIndex}"]`);
+            try {
+                itemBox.classList.remove('drag-change');
+            } catch {
+
+            }
+        })
+    }
 </script>
 
 
 
 <div class='grid-box' style:grid-template-columns={`repeat(${rowLen}, 1fr)`}>
-    {#each items as val}
-        <div class="item-box" >
+    {#each items as val, index}
+        <button class="item-box" data-index={`${index}`} on:dragenter={dragHandler} on:dragend={dragOverHandler} draggable="true">
             <div class="item">{val}</div>
-        </div>
+        </button>
     {/each}
 </div>
+
+<style>
+
+
+
+</style>
