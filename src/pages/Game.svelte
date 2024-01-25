@@ -8,24 +8,18 @@
     const givenWords = selectSet['wordList'];
     const subject = selectSet['subject'];
 
-    
+    /* 타이머 */
     let acc = 0;
-
-    // 현재 시간 간단히 표시할 수 있음
-    function timer(acc) {
-      acc += 1;
+    function stopWatch() {
+      acc = acc + 1;
 
       let minuteString = (Math.floor(acc / 60)).toString().padStart(2, '0');
       let secondString = (acc % 60).toString().padStart(2, '0');
       
-      console.log(`${minuteString} : ${secondString}`);
-
       const timerDiv = document.querySelector('div.info-bar__time');
       timerDiv.innerText = `${minuteString} : ${secondString}`;
     }
-
-    setInterval(timer, 1000, acc);
-
+    setInterval(stopWatch, 1000);
 </script>
 
 <Header />
