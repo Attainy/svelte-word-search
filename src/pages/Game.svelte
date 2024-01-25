@@ -8,9 +8,23 @@
     const givenWords = selectSet['wordList'];
     const subject = selectSet['subject'];
 
+    
+    let acc = 0;
+
     // 현재 시간 간단히 표시할 수 있음
-    let hour = new Date().getHours();
-    let min = new Date().getMinutes();
+    function timer(acc) {
+      acc += 1;
+
+      let minuteString = (Math.floor(acc / 60)).toString().padStart(2, '0');
+      let secondString = (acc % 60).toString().padStart(2, '0');
+      
+      console.log(`${minuteString} : ${secondString}`);
+
+      const timerDiv = document.querySelector('div.info-bar__time');
+      timerDiv.innerText = `${minuteString} : ${secondString}`;
+    }
+
+    setInterval(timer, 1000, acc);
 
 </script>
 
@@ -18,7 +32,7 @@
 <div class='game'>
     <div class="game-title">
       <h2>{subject}</h2>
-      <div class="info-bar__time">{hour}:{min}</div>
+      <div class="info-bar__time">00 : 00</div>
     </div>
 
     <div class="playbox">
