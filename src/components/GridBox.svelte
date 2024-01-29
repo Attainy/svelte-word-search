@@ -45,6 +45,8 @@
     // 행렬 (인덱스는 0부터 시작)
     let positionArray = {}; // ex. {'1,3': 'W'}
     let correctPosition = {}; // ex. {'1,3': 'W'}
+    let allRowIndexArray = [];
+    let allColIndexArray = [];
     let wordInfo = {};
 
     function positionOfSequence (seq, index, wordLength, startRowIndex, startColIndex) {
@@ -83,35 +85,48 @@
             
 
             // 잘못 겹치는 것이 없을 때까지 반복
-            let cnt = 0;
-            while (!errorExist && cnt < 10) {
             // for (let j=0; j<10; j++) {
+            let cnt = 0;
+            while (errorExist) {
                 
-                console.log('================= 진행중 =================');
-                
+                console.log(`==== ${cnt} ${word} 진행중 ====`);
                 errorExist = false;
                 sequence = extractRandom(0, 2) === 1 ? true : false; // 순방향, 역방향
                 
                 if (directionsArray[index] === 'horizon') {
                     startRowIndex = extractRandom(0, rowLen - 1);
+                    while (allRowIndexArray.includes(`${startRowIndex}hor`)) {
+                        startRowIndex = extractRandom(0, rowLen - 1);
+                    }
                     startColIndex = extractRandom(0, colLen - word.length + 1);
+
                 } else if (directionsArray[index] === 'vertical') {
                     startColIndex = extractRandom(0, colLen - 1);
+                    while (allColIndexArray.includes(`${startColIndex}ver`)) {
+                        startColIndex = extractRandom(0, colLen - 1);
+                    }
                     startRowIndex = extractRandom(0, rowLen - word.length + 1);
                 } else {
                     startRowIndex = extractRandom(0, rowLen - word.length + 1);
                     startColIndex = extractRandom(0, colLen - word.length + 1);
                 }
 
+                // for (let index=0; index<word.legth; index++) {
+                    // let letter = word[index];
                 [...word].map((letter, index) => {
                     position = positionOfSequence(sequence, index, wordLength, startRowIndex, startColIndex);
 
+                    console.log('########', positionArray[position], letter, positionArray[position] === letter);
+
                     // 위치 같은데 글자 다르면
-                    if (Object.keys(positionArray).includes(position) && (positionArray[position] !== letter)) {
+                    if (positionArray[position] === letter) {
+                        console.log('########', 'if', positionArray[position], letter, positionArray[position] === letter);
                         errorExist = true;
+                        // break;
                     }
-                    console.log(errorExist);
                 })
+                console.log(errorExist);
+                console.log('!errorExist && cnt < 20', !errorExist && cnt < 20);
 
                 cnt++;
             }
@@ -121,6 +136,9 @@
                 position = positionOfSequence(sequence, index, wordLength, startRowIndex, startColIndex);
                 positionArray[position] = letter;
                 correctPosition[position] = letter;
+
+                allRowIndexArray.push(`${startRowIndex}hor`);
+                allColIndexArray.push(`${startColIndex}ver`);
 
                 // pointArray.push(position)
                 // wordPlaceArray.push()
@@ -134,10 +152,9 @@
             // }
 
         })
-    }
 
-    console.log('중간')
-    console.log(positionArray);
+        console.log('중간', positionArray);
+    }
 
     // 나머지 칸 랜덤 글자로 채우기
     const alphabet ='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -219,7 +236,7 @@
 <style>
 
 .answer {
-    background-color: yellow;
+    background-color: skyblue;
 }
 
 </style>
