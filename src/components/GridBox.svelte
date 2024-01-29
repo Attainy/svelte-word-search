@@ -16,8 +16,6 @@
     let colIndex;
     let check;
 
-    let wordInfo = {};
-
     // 단어들 중 가장 긴 길이
     const maxLen = Math.max.apply(null, givenWords.map(val => val.length));
 
@@ -30,41 +28,87 @@
     let [horizontalCount, verticalCount, diagonalCount] = [2, 2, 2];
     horizontalCount = Math.floor(givenWords.length/2);
     verticalCount = givenWords.length - horizontalCount;
-    console.log(givenWords.length, '개', horizontalCount, verticalCount, diagonalCount);
+    let directionsArray = [];
+    for (let i=0; i<horizontalCount; i++) {
+        directionsArray.push('horizon');
+    }
+    for (let i=0; i<verticalCount; i++) {
+        directionsArray.push('vertical');
+    }
+    for (let i=0; i<diagonalCount; i++) {
+        directionsArray.push('diagonal');
+    }
+    directionsArray.sort(() => Math.random() - 0.5); // 무작위 배열
 
-    // 단어 랜덤으로 추출해서 시작 위치 지정하기
-    function randomExtractWord (shape) {
-        // 단어 랜덤 추출
-        word = givenWords[extractRandom(0, givenWords.length - 1)];
+    let positionArray = [];
+    let wordInfo = {};
 
-        // 시작 위치
-        startRowIndex = extractRandom(0, rowLen - word.length + 1);
-        startColIndex = extractRandom(0, colLen - word.length + 1);
+    function AssignWordPlace (wordList) {
+        wordList.map((word, index) => {
+            let pointArray = []; // 위치 좌표들 배열
+            let direction = extractRandom(0, 2) === 1 ? true : false; // 순방향, 역방향
+            let startRowIndex;
+            let startColIndex;
 
-        if (shape === "horizon") {
-            startRowIndex = extractRandom(0, rowLen - 1);
-            while (rowIndexArray.includes(startRowIndex)) {
-            startRowIndex = extractRandom(0, rowLen - 1)
+            // 수평 배열 => 행은 무작위 추출, 열은 글자 길이 고려
+            if (directionsArray[index] === 'horizon') {
+                startRowIndex = extractRandom(0, rowLen - 1);
+                startColIndex = extractRandom(0, colLen - word.length + 1);
+
+                word.map((letter, index) => {
+                    pointArray.append(`${}`)
+                })
             }
-        } else if (shape === "vertical") {
-            startColIndex = extractRandom(0, colLen - 1);
-            while (colIndexArray.includes(startColIndex)) {
-            startColIndex = extractRandom(0, colLen - 1)
+
+
+            wordInfo[word] = {
+                shape: directionsArray[index],
+                points: pointArray,
+                clear: false,
+                direction: 
             }
+        })
+    }
+
+
+
+
+
+
+
+    // // 단어 랜덤으로 추출해서 시작 위치 지정하기
+    // function randomExtractWord (shape) {
+    //     // 단어 랜덤 추출
+    //     word = givenWords[extractRandom(0, givenWords.length - 1)];
+
+    //     // 시작 위치
+    //     startRowIndex = extractRandom(0, rowLen - word.length + 1);
+    //     startColIndex = extractRandom(0, colLen - word.length + 1);
+
+    //     if (shape === "horizon") {
+    //         startRowIndex = extractRandom(0, rowLen - 1);
+    //         while (rowIndexArray.includes(startRowIndex)) {
+    //         startRowIndex = extractRandom(0, rowLen - 1)
+    //         }
+    //     } else if (shape === "vertical") {
+    //         startColIndex = extractRandom(0, colLen - 1);
+    //         while (colIndexArray.includes(startColIndex)) {
+    //         startColIndex = extractRandom(0, colLen - 1)
+    //         }
         
-          // 대각선
-        } else {
-            startRowIndex = extractRandom(0, rowLen - 1);
-            while (rowIndexArray.includes(startRowIndex)) {
-            startRowIndex = extractRandom(0, rowLen - 1)
-            }
-            startColIndex = extractRandom(0, colLen - 1);
-            while (colIndexArray.includes(startColIndex)) {
-            startColIndex = extractRandom(0, colLen - 1)
-            }
-        } 
-        return [word, startRowIndex, startColIndex];
-    };
+    //       // 대각선
+    //     } else {
+    //         startRowIndex = extractRandom(0, rowLen - 1);
+    //         while (rowIndexArray.includes(startRowIndex)) {
+    //         startRowIndex = extractRandom(0, rowLen - 1)
+    //         }
+    //         startColIndex = extractRandom(0, colLen - 1);
+    //         while (colIndexArray.includes(startColIndex)) {
+    //         startColIndex = extractRandom(0, colLen - 1)
+    //         }
+    //     } 
+    //     return [word, startRowIndex, startColIndex];
+    // };
 
 
     // function checkArray (shape) {
