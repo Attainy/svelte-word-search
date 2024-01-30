@@ -10,23 +10,26 @@
 
     /* 타이머 */
     let acc = 0;
+    let minuteString;
+    let secondString;
+
     function stopWatch() {
       acc = acc + 1;
 
-      let minuteString = (Math.floor(acc / 60)).toString().padStart(2, '0');
-      let secondString = (acc % 60).toString().padStart(2, '0');
+      minuteString = (Math.floor(acc / 60)).toString().padStart(2, '0');
+      secondString = (acc % 60).toString().padStart(2, '0');
       
       const timerDiv = document.querySelector('div.info-bar__time');
-      timerDiv.innerText = `${minuteString} : ${secondString}`;
     }
-    setInterval(stopWatch, 1000);    
+    // setInterval(stopWatch, 1000);    
 </script>
 
 <Header />
 <div class='game'>
     <div class="game-title">
       <h2>{subject}</h2>
-      <div class="info-bar__time">00 : 00</div>
+      <div class="info-bar__time">{`${minuteString} : ${secondString}`}</div>
+      <!-- <div class="info-bar__time">00 : 00</div> -->
     </div>
 
     <div class="playbox">

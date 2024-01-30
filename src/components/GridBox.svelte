@@ -21,8 +21,10 @@
 
     // 가로와 세로 길이
     const minWidth = 10;
-    const rowLen = extractRandom(Math.min(minWidth, maxLen + 2), Math.max(minWidth, maxLen + 2))
-    const colLen = extractRandom(Math.min(minWidth, maxLen + 2), Math.max(minWidth, maxLen + 2))
+    const rowLen = maxLen + 5;
+    const colLen = maxLen + 5;
+    // const rowLen = extractRandom(Math.min(minWidth, maxLen + 2), Math.max(minWidth, maxLen + 2))
+    // const colLen = extractRandom(Math.min(minWidth, maxLen + 2), Math.max(minWidth, maxLen + 2))
 
     // 가로, 세로, 대각선 각 모양별 개수 (최소 2개씩 설정)
     let [horizontalCount, verticalCount, diagonalCount] = [2, 2, 2];
@@ -49,58 +51,63 @@
     let allColIndexArray = [];
     let wordInfo = {};
 
-    function positionOfSequence (seq, index, wordLength, startRowIndex, startColIndex) {
+    function positionOfSequence (seq, shape, index, wordLength, startRowIndex, startColIndex) {
         // 순방향이면
         let pos;
         if (seq) {
-            if (directionsArray[index] === 'horizon') pos = `${startRowIndex},${startColIndex + index}`;
-            else if (directionsArray[index] === 'vertical') pos = `${startRowIndex + index},${startColIndex}`;
-            else pos = `${startRowIndex + index},${startColIndex + index}`;
+            if (shape === 'horizon') { pos = `${startRowIndex},${startColIndex + index}`; }
+            else if (shape === 'vertical') { pos = `${startRowIndex + index},${startColIndex}`; }
+            else { pos = `${startRowIndex + index},${startColIndex + index}`; }
         }
         // 역방향이면
         else {
-            if (directionsArray[index] === 'horizon') pos = 
-            `${startRowIndex},${startColIndex + wordLength - index - 1}`;
-            else if (directionsArray[index] === 'vertical') pos = 
-            `${startRowIndex + wordLength - index - 1},${startColIndex}`;
-            else pos = 
-            `${startRowIndex + wordLength - index - 1},${startColIndex + wordLength - index - 1}`;
+            if (shape === 'horizon') {
+                pos = `${startRowIndex},${startColIndex + wordLength - index - 1}`;
+            }
+            else if (shape === 'vertical') {
+                pos = `${startRowIndex + wordLength - index - 1},${startColIndex}`;
+            }
+            else {
+                pos = `${startRowIndex + wordLength - index - 1},${startColIndex + wordLength - index - 1}`;
+            }
         }
         return pos;
     }
 
 
     function AssignWordPlace (wordList) {
-        wordList.map((word, index) => {
+        wordList.map((word, wordIndex) => {
             
             /* 단어 하나 */
             let pointArray = []; // 위치 좌표들 배열
             let wordPlaceArray = []; // 단어들 배열
-            let errorExist = false;
+            let errorExist = true;
             let startRowIndex;
             let startColIndex;
             let sequence; // 순방향, 역방향
             let position;
             let wordLength = word.length;
+            let shape = directionsArray[wordIndex] // 모양
+            
             
 
             // 잘못 겹치는 것이 없을 때까지 반복
             // for (let j=0; j<10; j++) {
             let cnt = 0;
-            while (errorExist) {
+            while (errorExist && (cnt < 10)) {
                 
                 console.log(`==== ${cnt} ${word} 진행중 ====`);
                 errorExist = false;
                 sequence = extractRandom(0, 2) === 1 ? true : false; // 순방향, 역방향
                 
-                if (directionsArray[index] === 'horizon') {
+                if (shape === 'horizon') {
                     startRowIndex = extractRandom(0, rowLen - 1);
                     while (allRowIndexArray.includes(`${startRowIndex}hor`)) {
                         startRowIndex = extractRandom(0, rowLen - 1);
                     }
                     startColIndex = extractRandom(0, colLen - word.length + 1);
 
-                } else if (directionsArray[index] === 'vertical') {
+                } else if (shape === 'vertical') {
                     startColIndex = extractRandom(0, colLen - 1);
                     while (allColIndexArray.includes(`${startColIndex}ver`)) {
                         startColIndex = extractRandom(0, colLen - 1);
@@ -113,43 +120,55 @@
 
                 // for (let index=0; index<word.legth; index++) {
                     // let letter = word[index];
-                [...word].map((letter, index) => {
-                    position = positionOfSequence(sequence, index, wordLength, startRowIndex, startColIndex);
-
-                    console.log('########', positionArray[position], letter, positionArray[position] === letter);
-
+                let checkErrorPosition = [];
+                [...word].map((letter, letterIndex) => {
+                    position = positionOfSequence(sequence, shape, letterIndex, wordLength, startRowIndex, startColIndex);
+                    console.log(word, letter, position, 'info', letterIndex, wordLength, startRowIndex, startColIndex, sequence);
+                    
+                    // console.log('########', positionArray[position], letter, positionArray[position] === letter);
+                    
                     // 위치 같은데 글자 다르면
                     if (positionArray[position] === letter) {
-                        console.log('########', 'if', positionArray[position], letter, positionArray[position] === letter);
-                        errorExist = true;
-                        // break;
+                        // errorExist = true;
+                        checkErrorPosition.push(true);
+                    }
+                    // 중복 안됐으면 false (해당 반복문 밖의 반복문에서 false를 유지하면 while 종료되고 position 확정) 
+                    else {
+                        // errorExist = false;
+                        checkErrorPosition.push(false);
                     }
                 })
-                console.log(errorExist);
-                console.log('!errorExist && cnt < 20', !errorExist && cnt < 20);
 
+                if (checkErrorPosition.includes(true)) {
+                    errorExist = true;
+                } else {
+                    errorExist = false;
+                }
+                console.log(errorExist, 'cnt : ', cnt);
                 cnt++;
             }
 
             // 잘못 겹치는 것이 없으면 while문 빠져나와서 필요한 곳에 정보 추가
-            [...word].map((letter, index) => {
-                position = positionOfSequence(sequence, index, wordLength, startRowIndex, startColIndex);
+            [...word].map((letter, letterIndex) => {
+                position = positionOfSequence(sequence, shape, letterIndex, wordLength, startRowIndex, startColIndex);
                 positionArray[position] = letter;
                 correctPosition[position] = letter;
+                
 
                 allRowIndexArray.push(`${startRowIndex}hor`);
                 allColIndexArray.push(`${startColIndex}ver`);
 
-                // pointArray.push(position)
-                // wordPlaceArray.push()
+                pointArray.push(position) // { word : ['0,1', '0,2', ...]}
+                wordPlaceArray.push()
             })
 
-            // wordInfo[word] = {
-            //     shape: directionsArray[index],
-            //     points: pointArray,
-            //     clear: false,
-            //     direction: sequence,
-            // }
+            wordInfo[word] = {
+                shape: directionsArray[wordIndex],
+                points: pointArray,
+                clear: false,
+                direction: sequence,
+            }
+            console.log(word, pointArray);
 
         })
 
@@ -201,20 +220,18 @@
 
     /* 정답 확인 */
     function answerCheck () {
-        for (let row=0; row<rowLen; row++) {
-            for (let col=0; col<colLen; col++) {
-                let tempPos = `${row},${col}`;
-                
-            }
-        }
+        styleOn = !styleOn;
+        console.log('click', styleOn);
+        let cc = `item-box ${(Object.keys(correctPosition).includes(`1,1`) && styleOn) ? 'answer' : ''}`;
+        console.log(cc, Object.keys(correctPosition).includes(`1,1`), styleOn);
     }
 
 
     AssignWordPlace(givenWords);
 
-    console.log('최종')
-    console.log(positionArray);
+    console.log('최종', positionArray);
     console.log('correct', correctPosition);
+    console.log('wordinfo', wordInfo);
 
 </script>
 
@@ -225,7 +242,8 @@
     <!-- {#each [...Array((rowLen-1)*(colLen-1))] as val, index} -->
     {#each Array(rowLen) as _, rowIdx}
         {#each Array(colLen) as _, colIdx}
-            <button class={`item-box ${Object.keys(correctPosition).includes(`${rowIdx},${colIdx}`) ? 'answer' : ''}`} data-index={`${rowIdx},${colIdx}`} on:dragenter={dragHandler} on:dragend={dragOverHandler} draggable="true">
+            <button class={`item-box ${(Object.keys(correctPosition).includes(`${rowIdx},${colIdx}`) && styleOn) ? 'answer' : ''}`} data-index={`${rowIdx},${colIdx}`} on:dragenter={dragHandler} on:dragend={dragOverHandler} draggable="true">
+            <!-- <button class={`item-box ${Object.keys(correctPosition).includes(`${rowIdx},${colIdx}`) ? 'answer' : ''}`} data-index={`${rowIdx},${colIdx}`} on:dragenter={dragHandler} on:dragend={dragOverHandler} draggable="true"> -->
                 <div class='item'>{positionArray[`${rowIdx},${colIdx}`]}</div>
             </button>
         {/each}
