@@ -8,15 +8,10 @@
 
     // 단어들 중 가장 긴 길이
     const maxLen = Math.max.apply(null, givenWords.map(val => val.length));
-
     // 가로와 세로 길이
     const minWidth = 10;
     const rowLen = Math.max(minWidth, maxLen + 5);
     const colLen = Math.max(minWidth, maxLen + 5);
-
-
-    // 행렬 (인덱스는 0부터 시작)
-    let wordInfo = {};
 
     function getRandomColor() {
 	    // return "#" + Math.floor(Math.random() * 16777215).toString(16);
@@ -48,12 +43,13 @@
         return pos;
     }
 
-
+    /* 단어 배치 */
     function AssignWordPlace (wordList) {
 
         let positionArray = {};
         let correctPosition = {};
         let colorList = {};
+        let wordInfo = {}; // 행렬 (인덱스는 0부터 시작)
 
         // 길이가 긴 단어부터 배열
         wordList.sort((x, y)=>y.length-x.length);
@@ -131,54 +127,69 @@
             }
         }
 
-        return [positionArray, correctPosition, colorList];
+        return [positionArray, correctPosition, colorList, wordInfo];
     }
 
-    
-
-    
+    let styleOn = false;
+    let [wordPositionList, correctPosition, colorList, wordInfo] = AssignWordPlace(givenWords);
 
     /* 드래그 이벤트 */
     let draggElement = [];
+    let correctWords = [];
 
     const dragHandler = (event) => {
         let dataIndex = event.target.getAttribute('data-index');
         let itemBox = document.querySelector(`.item-box[data-index="${dataIndex}"]`);
         try {
             itemBox.classList.add('drag-change');
-            draggElement.push(dataIndex);
-        } catch {
-
-        }
+        } catch {}
+        draggElement.push(dataIndex);
     }
 
     const dragOverHandler = (event) => {
-        draggElement.map((dataIndex) => {
-            let itemBox = document.querySelector(`.item-box[data-index="${dataIndex}"]`);
-            try {
-                itemBox.classList.remove('drag-change');
-            } catch {
+        let checkCorrect = false;
+        let dragSet = new Set(draggElement);
+        let dragCorrectArray = [...dragSet].filter((element) => {
+            return element !== undefined && element !== null;
+        });
 
-            }
-        })
+        for (let wd of Object.keys(wordInfo)) {
+            if (JSON.stringify(wordInfo[wd].points.sort()) == JSON.stringify(dragCorrectArray.sort())) {
+                checkCorrect = true;
+                correctWords.push(wd);
+                break
+            };
+        }
+
+        if (!checkCorrect) {
+            dragCorrectArray.map((dataIndex) => {
+                let itemBox = document.querySelector(`.item-box[data-index="${dataIndex}"]`);
+                try {
+                    itemBox.classList.remove('drag-change');
+                } catch {}
+            })
+            dragCorrectArray = [];
+        }
+        draggElement = [];
+
+        if (JSON.stringify(correctWords.sort()) === JSON.stringify(givenWords)) {
+            alert("모든 정답을 맞췄습니다.")
+        }
     }
 
-    /* 정답 확인 */
+
+    /* 정답 확인 찬스 */
     function answerCheck () {
         styleOn = !styleOn;
     }
-    
-    let styleOn = false;
-    let [wordPositionList, correctPosition, colorList] = AssignWordPlace(givenWords);
-
-    
 
     function answerOnCheck(rowIdx, colIdx, styleOn) {
-        return Object.keys(correctPosition).includes(`${rowIdx},${colIdx}`) && styleOn
+        return Object.keys(correctPosition).includes(`${rowIdx},${colIdx}`) && styleOn;
     }
+
     // console.log('최종', positionArray);
-    // console.log('correct', correctPosition);
-    // console.log('wordinfo', wordInfo);
+    console.log('correct', correctPosition);
+    console.log('wordinfo', wordInfo);
 </script>
 
 
@@ -187,14 +198,13 @@
 <div class='grid-box' style:grid-template-columns={`repeat(${rowLen}, 1fr)`}>
     {#each Array(rowLen) as _, rowIdx}
         {#each Array(colLen) as _, colIdx}
-        <!-- class={`item-box ${answerOnCheck(rowIdx, colIdx, styleOn) ? 'answer' : ''}`}  -->
             <button 
             class='item-box'
             data-index={`${rowIdx},${colIdx}`} 
             on:dragenter={dragHandler} 
             on:dragend={dragOverHandler} 
             draggable="true"
-            style={`background-color: ${answerOnCheck(rowIdx, colIdx, styleOn) ?  colorList[`${rowIdx},${colIdx}`]: ''}`}
+            style={`background-color: ${answerOnCheck(rowIdx, colIdx, styleOn) ? colorList[`${rowIdx},${colIdx}`]: ''}`}
             >
                 <div class='item'>{wordPositionList[`${rowIdx},${colIdx}`]}</div>
             </button>
